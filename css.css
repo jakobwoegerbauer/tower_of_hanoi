@@ -22,6 +22,7 @@ div.peg {
 	padding: 0;
 	height: 96%;
 	width: 31%;
+	border-radius: 10px;
 
 	background-color: #ccc;
 }
@@ -38,6 +39,7 @@ div.peg div.disk {
 	padding: 0;
 	width: 100%;
 	box-sizing: border-box;
+	border-radius: 15px;
 
 	background-color: #777;
 }
