@@ -50,7 +50,7 @@ function displayPegs(pegs, pegMinWidth) {
 	var diskElements = $('div.disk');
 	for (var i = 0; i < diskCount; i++) {
 		$(diskElements[i]).css({
-			width: (pegMinWidth + (100 - pegMinWidth) * ((pegs[0][pegs.length - i + 1] - 1) / (diskCount - 1))) + '%'
+			width: (pegMinWidth + (100 - pegMinWidth) * ((pegs[0][diskCount - i - 1] - 1) / (diskCount - 1))) + '%'
 		});
 	}
 
