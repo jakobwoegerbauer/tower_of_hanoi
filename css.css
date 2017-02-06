@@ -1,0 +1,64 @@
+body {
+	background-color: #f9f9f9;
+}
+
+#pegcontainer {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 90%;
+	margin: 0;
+	border: none;
+	padding: 2%;
+	box-sizing: border-box;
+}
+
+div.peg {
+	float: left;
+	margin: 0;
+	margin-left: 3%;
+	border:none;
+	padding: 0;
+	height: 96%;
+	width: 31%;
+	border-radius: 10px;
+
+	background-color: #ccc;
+}
+div.peg:first-child {
+	margin-left: 0;
+}
+div.peg:last-child {
+	background-color: #bdb;
+}
+
+div.peg div.disk {
+	margin: 0 auto;
+	border: 2px solid #000;
+	padding: 0;
+	width: 100%;
+	box-sizing: border-box;
+	border-radius: 15px;
+
+	background-color: #777;
+}
+
+/* ============================================================================================== */
+
+#footer {
+	margin: 0;
+	border: 0;
+	padding: 5px;
+	padding-top: 0;
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	width: 100%;
+	height: 10%;
+	box-sizing: border-box;
+}
+
+#footer > h1 {
+	margin: 0;
+}
