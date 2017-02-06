@@ -1,12 +1,25 @@
 $(document).ready(function() {
+	window.moveCounter = 0;
 	window.pegs = createPegs(
 		/*  pegCount = */ 3,
 		/* diskCount = */ 5);
 	displayPegs(pegs, 
-		/* pegMinHeight = */ 30);
+		/* pegMinWidth = */ 30);
+	adjustMoveCounterFontSize();
 });
 
-function displayPegs(pegs, pegMinHeight) {
+$(window).resize(function() {
+	adjustMoveCounterFontSize();
+});
+
+function adjustMoveCounterFontSize() {
+	var moveCounter = $('#movecounter').parent();
+	moveCounter.css({
+		'font-size': $('#footer').height() + 'px'
+	});
+}
+
+function displayPegs(pegs, pegMinWidth) {
 	var diskCount = pegs[0][0];
 	var pegContainer = $('#pegcontainer');
 	pegContainer.html('');
@@ -22,7 +35,7 @@ function displayPegs(pegs, pegMinHeight) {
 	var pegElements = $('div.peg');
 	var firstPegMarginLeft = (pegContainer.width() + $(pegElements[0]).offset().left - $(pegElements[pegElements.length - 1]).offset().left - $(pegElements[pegElements.length - 1]).width())/2;
 	$('div.peg:first-child').css({
-		'margin-left':firstPegMarginLeft
+		'margin-left': firstPegMarginLeft
 	});
 
 	for (var i = diskCount - 1; i >= 0; i--) {
@@ -37,8 +50,8 @@ function displayPegs(pegs, pegMinHeight) {
 	var diskElements = $('div.disk');
 	for (var i = 0; i < diskCount; i++) {
 		$(diskElements[i]).css({
-			width: (pegMinHeight + (100 - pegMinHeight) * (pegs[0][pegs.length - i + 1] - 1) / (diskCount - 1)) + '%'
-		})
+			width: (pegMinWidth + (100 - pegMinWidth) * ((pegs[0][pegs.length - i + 1] - 1) / (diskCount - 1))) + '%'
+		});
 	}
 
 	$('div.disk').draggable({
@@ -58,7 +71,6 @@ function displayPegs(pegs, pegMinHeight) {
 
 				if (oldPegIndex != newPegIndex) {
 					if (moveDisk(pegs[oldPegIndex], pegs[newPegIndex])) {
-						console.log(pegs.toSource());
 						var diskHeight = $(this).outerHeight();
 						var newPeg = $('div.peg:nth-child(' + (newPegIndex + 1) + ')');
 						newPeg.find('div.disk:first-child').css({
@@ -76,6 +88,9 @@ function displayPegs(pegs, pegMinHeight) {
 						$(this).css({
 							'margin-top': ((diskCount - newPeg.find('div.disk').length) * diskHeight) + 'px'
 						});
+
+						moveCounter++;
+						$('#movecounter').html(moveCounter);
 					} else {
 						alert('Invalid move!');
 					}
