@@ -1,3 +1,7 @@
+body {
+	background-color: #f9f9f9;
+}
+
 #pegcontainer {
 	position: absolute;
 	top: 0;
@@ -8,8 +12,6 @@
 	border: none;
 	padding: 2%;
 	box-sizing: border-box;
-
-	background-color: #090;
 }
 
 div.peg {
@@ -21,10 +23,13 @@ div.peg {
 	height: 96%;
 	width: 31%;
 
-	background-color: #900;
+	background-color: #ccc;
 }
 div.peg:first-child {
 	margin-left: 0;
+}
+div.peg:last-child {
+	background-color: #bdb;
 }
 
 div.peg div.disk {
@@ -34,7 +39,7 @@ div.peg div.disk {
 	width: 100%;
 	box-sizing: border-box;
 
-	background-color: #009;
+	background-color: #777;
 }
 
 /* ============================================================================================== */
