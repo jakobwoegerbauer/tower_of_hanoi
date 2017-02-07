@@ -1,6 +1,6 @@
 $(document).ready(function() {
 	window.moveCounter = 0;
-
+	
 	swal({
 		title: "Tower of Hanoi",
 		text: "How many disks do you want?",
@@ -11,21 +11,64 @@ $(document).ready(function() {
 		inputPlaceholder: "Write a number"
 	}, function(inputValue) {
 		var input_number = parseInt(inputValue);
-		if (inputValue === false || inputValue === "" || isNaN(input_number)) {
-			swal.showInputError("You need to write a number!");
+		if (inputValue === false || inputValue === "" || isNaN(input_number) || input_number < 1 || 20 < input_number) {
+			swal.showInputError("You need to write a number between 1 and 20!");
 			return false;
 		}
 
 		window.pegs = createPegs(
 			/*  pegCount = */ 3,
 			/* diskCount = */ input_number);
-		displayPegs(pegs, 
+		initHtml(pegs, 
 			/* pegMinWidth = */ 30);
 
 		swal("Good luck!", inputValue + " disks have been generated for you.", "info");
-	});
 
+		$('#btn_solve').click(function() {
+			if (!this.hasBeenClicked) {
+				this.hasBeenClicked = true;
+				$('div.disk').draggable('disable');
+				calculateBestSolution(input_number);
+				$(this).html('Perform next move');
+				$('#btn_auto_solve').show();
+				$('#btn_auto_solve').click(function() {
+					(function auto_solve() {
+						$('#btn_solve').click();
+						if (moves.length > 0) {
+							setTimeout(function() {
+								auto_solve();
+							}, Math.max(5, 15000 / (Math.pow(2, input_number) - 1)));
+						}
+					})();
+				});
+				swal("The solution has been calculated!", "Press 'Perform next move' to step through the solution or 'Solve automatically' to see the solution.", "info");
+			} else if (moves.length > 0) {
+				moveDiskElement($('div.peg:nth-child(' + (moves[0][0] + 1) + ') div.disk:first-child'), moves[0][0], moves[0][1], input_number);
+				moves.splice(0,1); // remove move
+			}
+		});
+	});
 	adjustMoveCounterFontSize();
+	/*$('#btn_hint').click(function() {
+		var move = calculateBestNextMove(pegs);
+		var pegFrom = $('div.peg:nth-child('+ (move.from + 1) + ')');
+		var pegTo = $('div.peg:nth-child('+ (move.to + 1) + ')');
+
+		pegFrom.css({
+			'border-bottom': '10px solid #e00000'
+		});
+		pegTo.css({
+			'border-bottom': '10px solid #00e000'
+		});
+		setTimeout(function() {
+			pegFrom.css({
+				'border-bottom': 'none'
+			});
+			pegTo.css({
+				'border-bottom': 'none'
+			});
+		}, 1000);
+	});*/
 });
 
 $(window).resize(function() {
@@ -39,7 +82,7 @@ function adjustMoveCounterFontSize() {
 	});
 }
 
-function displayPegs(pegs, pegMinWidth) {
+function initHtml(pegs, pegMinWidth) {
 	var diskCount = pegs[0][0];
 	var pegContainer = $('#pegcontainer');
 	pegContainer.html('');
@@ -91,26 +134,7 @@ function displayPegs(pegs, pegMinWidth) {
 
 				if (oldPegIndex != newPegIndex) {
 					if (moveDisk(pegs[oldPegIndex], pegs[newPegIndex])) {
-						var diskHeight = $(this).outerHeight();
-						var newPeg = $('div.peg:nth-child(' + (newPegIndex + 1) + ')');
-						newPeg.find('div.disk:first-child').css({
-							'margin-top': 0
-						});
-						newPeg.prepend(this);
-						$(this).attr({
-							peg: newPegIndex
-						});
-
-						var oldPeg = $('div.peg:nth-child(' + (oldPegIndex + 1) + ')');
-						oldPeg.find('div.disk:first-child').css({
-							'margin-top': ((diskCount - oldPeg.find('div.disk').length) * diskHeight) + 'px'
-						});
-						$(this).css({
-							'margin-top': ((diskCount - newPeg.find('div.disk').length) * diskHeight) + 'px'
-						});
-
-						moveCounter++;
-						$('#movecounter').html(moveCounter);
+						moveDiskElement($(this), oldPegIndex, newPegIndex, diskCount);
 
 						if (pegs[0].length == 0 && pegs[1].length == 0) { // finished
 							swal("Good job!", "You solved the puzzle in " + moveCounter + " moves.", "success");
@@ -126,4 +150,27 @@ function displayPegs(pegs, pegMinWidth) {
 			});
 		}
 	});
+}
+
+function moveDiskElement(disk, oldPegIndex, newPegIndex, diskCount) {
+	var diskHeight = $(disk).outerHeight();
+	var newPeg = $('div.peg:nth-child(' + (newPegIndex + 1) + ')');
+	newPeg.find('div.disk:first-child').css({
+		'margin-top': 0
+	});
+	newPeg.prepend(disk);
+	$(disk).attr({
+		peg: newPegIndex
+	});
+
+	var oldPeg = $('div.peg:nth-child(' + (oldPegIndex + 1) + ')');
+	oldPeg.find('div.disk:first-child').css({
+		'margin-top': ((diskCount - oldPeg.find('div.disk').length) * diskHeight) + 'px'
+	});
+	$(disk).css({
+		'margin-top': ((diskCount - newPeg.find('div.disk').length) * diskHeight) + 'px'
+	});
+
+	moveCounter++;
+	$('#movecounter').html(moveCounter);
 }
