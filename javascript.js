@@ -1,6 +1,6 @@
 $(document).ready(function() {
 	window.moveCounter = 0;
-
+	
 	swal({
 		title: "Tower of Hanoi",
 		text: "How many disks do you want?",
@@ -19,12 +19,24 @@ $(document).ready(function() {
 		window.pegs = createPegs(
 			/*  pegCount = */ 3,
 			/* diskCount = */ input_number);
-		displayPegs(pegs, 
+		initHtml(pegs, 
 			/* pegMinWidth = */ 30);
 
 		swal("Good luck!", inputValue + " disks have been generated for you.", "info");
-	});
 
+		$('#btn_solve').click(function() {
+			if (!this.hasBeenClicked) {
+				this.hasBeenClicked = true;
+				$('div.disk').draggable('disable');
+				calculateBestSolution(input_number);
+				$(this).html('Perform next move');
+			} else {
+				moveDiskElement($('div.peg:nth-child(' + (moves[0][0] + 1) + ') div.disk:first-child'), moves[0][0], moves[0][1], input_number);
+				moves.splice(0,1); // remove move
+				console.log(moves);
+			}
+		});
+	});
 	adjustMoveCounterFontSize();
 	/*$('#btn_hint').click(function() {
 		var move = calculateBestNextMove(pegs);
@@ -59,7 +71,7 @@ function adjustMoveCounterFontSize() {
 	});
 }
 
-function displayPegs(pegs, pegMinWidth) {
+function initHtml(pegs, pegMinWidth) {
 	var diskCount = pegs[0][0];
 	var pegContainer = $('#pegcontainer');
 	pegContainer.html('');
@@ -111,26 +123,7 @@ function displayPegs(pegs, pegMinWidth) {
 
 				if (oldPegIndex != newPegIndex) {
 					if (moveDisk(pegs[oldPegIndex], pegs[newPegIndex])) {
-						var diskHeight = $(this).outerHeight();
-						var newPeg = $('div.peg:nth-child(' + (newPegIndex + 1) + ')');
-						newPeg.find('div.disk:first-child').css({
-							'margin-top': 0
-						});
-						newPeg.prepend(this);
-						$(this).attr({
-							peg: newPegIndex
-						});
-
-						var oldPeg = $('div.peg:nth-child(' + (oldPegIndex + 1) + ')');
-						oldPeg.find('div.disk:first-child').css({
-							'margin-top': ((diskCount - oldPeg.find('div.disk').length) * diskHeight) + 'px'
-						});
-						$(this).css({
-							'margin-top': ((diskCount - newPeg.find('div.disk').length) * diskHeight) + 'px'
-						});
-
-						moveCounter++;
-						$('#movecounter').html(moveCounter);
+						moveDiskElement($(this), oldPegIndex, newPegIndex, diskCount);
 
 						if (pegs[0].length == 0 && pegs[1].length == 0) { // finished
 							swal("Good job!", "You solved the puzzle in " + moveCounter + " moves.", "success");
@@ -146,4 +139,27 @@ function displayPegs(pegs, pegMinWidth) {
 			});
 		}
 	});
+}
+
+function moveDiskElement(disk, oldPegIndex, newPegIndex, diskCount) {
+	var diskHeight = $(disk).outerHeight();
+	var newPeg = $('div.peg:nth-child(' + (newPegIndex + 1) + ')');
+	newPeg.find('div.disk:first-child').css({
+		'margin-top': 0
+	});
+	newPeg.prepend(disk);
+	$(disk).attr({
+		peg: newPegIndex
+	});
+
+	var oldPeg = $('div.peg:nth-child(' + (oldPegIndex + 1) + ')');
+	oldPeg.find('div.disk:first-child').css({
+		'margin-top': ((diskCount - oldPeg.find('div.disk').length) * diskHeight) + 'px'
+	});
+	$(disk).css({
+		'margin-top': ((diskCount - newPeg.find('div.disk').length) * diskHeight) + 'px'
+	});
+
+	moveCounter++;
+	$('#movecounter').html(moveCounter);
 }
