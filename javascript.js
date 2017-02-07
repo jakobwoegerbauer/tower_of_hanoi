@@ -11,8 +11,8 @@ $(document).ready(function() {
 		inputPlaceholder: "Write a number"
 	}, function(inputValue) {
 		var input_number = parseInt(inputValue);
-		if (inputValue === false || inputValue === "" || isNaN(input_number)) {
-			swal.showInputError("You need to write a number!");
+		if (inputValue === false || inputValue === "" || isNaN(input_number) || input_number < 1 || 20 < input_number) {
+			swal.showInputError("You need to write a number between 1 and 20!");
 			return false;
 		}
 
@@ -30,6 +30,7 @@ $(document).ready(function() {
 				$('div.disk').draggable('disable');
 				calculateBestSolution(input_number);
 				$(this).html('Perform next move');
+				swal("The solution has been calculated!", "Press 'Perform next move' to see the solution.", "info");
 			} else {
 				moveDiskElement($('div.peg:nth-child(' + (moves[0][0] + 1) + ') div.disk:first-child'), moves[0][0], moves[0][1], input_number);
 				moves.splice(0,1); // remove move
