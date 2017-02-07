@@ -6,7 +6,7 @@ $(document).ready(function() {
 	displayPegs(pegs, 
 		/* pegMinWidth = */ 30);
 	adjustMoveCounterFontSize();
-	$('#btn_hint').click(function() {
+	/*$('#btn_hint').click(function() {
 		var move = calculateBestNextMove(pegs);
 		var pegFrom = $('div.peg:nth-child('+ (move.from + 1) + ')');
 		var pegTo = $('div.peg:nth-child('+ (move.to + 1) + ')');
@@ -25,7 +25,7 @@ $(document).ready(function() {
 				'border-bottom': 'none'
 			});
 		}, 1000);
-	});
+	});*/
 });
 
 $(window).resize(function() {

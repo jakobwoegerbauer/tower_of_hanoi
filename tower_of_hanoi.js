@@ -1,4 +1,5 @@
 var pegs = [];
+var moves = [];
 
 function createPegs(diskCount, pegCount) {
 	var pegs = [];
@@ -25,6 +26,30 @@ function moveDisk(fromPeg, toPeg) {
 	}
 }
 
-function calculateBestNextMove(pegs, diskCount) {
-	
+function getTempTower(a, b){
+	if(a !== 0 && b !== 0){
+		return 0;
+	}
+	if(a !== 1 && b !== 1){
+		return 1;
+	}
+	return 2;
+}
+
+function move(from, to){
+	moves.push([from,to]);
+}
+
+function solve(from, to, amount){
+	if(amount == 1){
+		move(from, to);
+		return;
+	}
+	solve(from, getTempTower(from, to), amount-1);
+	move(from, to);
+	solve(getTempTower(from, to), to, amount-1);
+}
+
+function calculateBestSolution(amount){
+	solve(0, 2, amount);
 }
