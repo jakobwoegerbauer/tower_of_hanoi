@@ -1,10 +1,30 @@
 $(document).ready(function() {
 	window.moveCounter = 0;
-	window.pegs = createPegs(
-		/*  pegCount = */ 3,
-		/* diskCount = */ 5);
-	displayPegs(pegs, 
-		/* pegMinWidth = */ 30);
+
+	swal({
+		title: "Tower of Hanoi",
+		text: "How many disks do you want?",
+		type: "input",
+		showCancelButton: true,
+		closeOnConfirm: false,
+		animation: "slide-from-top",
+		inputPlaceholder: "Write a number"
+	}, function(inputValue) {
+		var input_number = parseInt(inputValue);
+		if (inputValue === false || inputValue === "" || isNaN(input_number)) {
+			swal.showInputError("You need to write a number!");
+			return false;
+		}
+
+		window.pegs = createPegs(
+			/*  pegCount = */ 3,
+			/* diskCount = */ input_number);
+		displayPegs(pegs, 
+			/* pegMinWidth = */ 30);
+
+		swal("Good luck!", inputValue + " disks have been generated for you.", "info");
+	});
+
 	adjustMoveCounterFontSize();
 	/*$('#btn_hint').click(function() {
 		var move = calculateBestNextMove(pegs);
@@ -79,10 +99,10 @@ function displayPegs(pegs, pegMinWidth) {
 		stop: function() {
 			var oldPegIndex = parseInt($(this).attr('peg'));
 			if ($('div.peg:nth-child(' + (oldPegIndex + 1) + ') div.disk:first-child').attr('value') != $(this).attr('value')) {
-				alert('Invalid move! You may only move the topmost disk.');
+				swal('Invalid move!', 'You may only move the topmost disk.', 'error');
 			} else {
 				var newPegIndex;
-				var diskOffsetLeft = $(this).offset().left;
+				var diskOffsetLeft = $(this).offset().left + $(this).width() / 2;
 				for (newPegIndex = pegElements.length - 1; newPegIndex >= 0; newPegIndex--) {
 					if ($(pegElements[newPegIndex]).offset().left < diskOffsetLeft) {
 						break;
@@ -111,8 +131,12 @@ function displayPegs(pegs, pegMinWidth) {
 
 						moveCounter++;
 						$('#movecounter').html(moveCounter);
+
+						if (pegs[0].length == 0 && pegs[1].length == 0) { // finished
+							swal("Good job!", "You solved the puzzle in " + moveCounter + " moves.", "success");
+						}
 					} else {
-						alert('Invalid move!');
+						swal('Invalid move!', 'A disk may not sit on top of a smaller disk.', 'error');
 					}
 				}
 			}
