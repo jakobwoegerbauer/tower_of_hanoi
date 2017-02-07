@@ -30,11 +30,21 @@ $(document).ready(function() {
 				$('div.disk').draggable('disable');
 				calculateBestSolution(input_number);
 				$(this).html('Perform next move');
-				swal("The solution has been calculated!", "Press 'Perform next move' to see the solution.", "info");
-			} else {
+				$('#btn_auto_solve').show();
+				$('#btn_auto_solve').click(function() {
+					(function auto_solve() {
+						$('#btn_solve').click();
+						if (moves.length > 0) {
+							setTimeout(function() {
+								auto_solve();
+							}, Math.max(5, 15000 / (Math.pow(2, input_number) - 1)));
+						}
+					})();
+				});
+				swal("The solution has been calculated!", "Press 'Perform next move' to step through the solution or 'Solve automatically' to see the solution.", "info");
+			} else if (moves.length > 0) {
 				moveDiskElement($('div.peg:nth-child(' + (moves[0][0] + 1) + ') div.disk:first-child'), moves[0][0], moves[0][1], input_number);
 				moves.splice(0,1); // remove move
-				console.log(moves);
 			}
 		});
 	});

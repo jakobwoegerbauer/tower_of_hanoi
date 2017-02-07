@@ -73,7 +73,6 @@ div.peg div.disk {
 	height: 100%;
 }
 
-#btn_hint {
-	font-size: 2em;
-	font-weight: bold;
+#btn_auto_solve {
+	display: none;
 }
