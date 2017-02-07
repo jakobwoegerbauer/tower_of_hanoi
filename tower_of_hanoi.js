@@ -12,11 +12,19 @@ function createPegs(diskCount, pegCount) {
 	return pegs;
 }
 
+function canMove(fromPeg, toPeg) {
+	return fromPeg.length > 0 && (toPeg.length == 0 || fromPeg[fromPeg.length - 1] < toPeg[toPeg.length - 1]);
+}
+
 function moveDisk(fromPeg, toPeg) {
-	if (fromPeg.length == 0 || (toPeg.length > 0 && fromPeg[fromPeg.length - 1] > toPeg[toPeg.length - 1])) {
-		return false;
-	} else {
+	if (canMove(fromPeg, toPeg)) {
 		toPeg.push(fromPeg.splice(fromPeg.length - 1, 1)[0]);
 		return true;
+	} else {
+		return false;
 	}
+}
+
+function calculateBestNextMove(pegs, diskCount) {
+	
 }
