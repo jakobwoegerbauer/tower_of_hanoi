@@ -60,5 +60,19 @@ div.peg div.disk {
 }
 
 #footer > h1 {
+	display: inline-block;
 	margin: 0;
+}
+
+#footer > button {
+	float: right;
+	margin: 0;
+	margin-left: 5px;
+	border: none;
+	padding: 0;
+	height: 100%;
+}
+
+#btn_auto_solve {
+	display: none;
 }
