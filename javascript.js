@@ -118,11 +118,14 @@ function initHtml(pegs, pegMinWidth) {
 						moveDiskElement($(this), oldPegIndex, newPegIndex, diskCount);
 
 						if (pegs[0].length == 0 && pegs[1].length == 0) { // finished
-							$.getJSON('http://vm04.htl-leonding.ac.at:8080', {
-								count: moveCounter,
-								amount: diskCount
-							}, function(data){
-								// Handles the callback when the data returns
+							$(document).ready(function () {
+								$.ajax({
+									type: 'GET',
+									url: 'http://vm04.htl-leonding.ac.at:8080?counter='+moveCounter+'&amount='+diskCount,
+									success: function (data) {
+										console.log(data);
+									}
+								});
 							});
 							swal("Good job!", "You solved the puzzle in " + moveCounter + " moves.", "success");
 						}
