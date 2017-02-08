@@ -49,26 +49,6 @@ $(document).ready(function() {
 		});
 	});
 	adjustMoveCounterFontSize();
-	/*$('#btn_hint').click(function() {
-		var move = calculateBestNextMove(pegs);
-		var pegFrom = $('div.peg:nth-child('+ (move.from + 1) + ')');
-		var pegTo = $('div.peg:nth-child('+ (move.to + 1) + ')');
-
-		pegFrom.css({
-			'border-bottom': '10px solid #e00000'
-		});
-		pegTo.css({
-			'border-bottom': '10px solid #00e000'
-		});
-		setTimeout(function() {
-			pegFrom.css({
-				'border-bottom': 'none'
-			});
-			pegTo.css({
-				'border-bottom': 'none'
-			});
-		}, 1000);
-	});*/
 });
 
 $(window).resize(function() {
@@ -120,6 +100,7 @@ function initHtml(pegs, pegMinWidth) {
 	$('div.disk').draggable({
 		snap: 'div.peg',
 		stop: function() {
+			$('#btn_solve').hide();
 			var oldPegIndex = parseInt($(this).attr('peg'));
 			if ($('div.peg:nth-child(' + (oldPegIndex + 1) + ') div.disk:first-child').attr('value') != $(this).attr('value')) {
 				swal('Invalid move!', 'You may only move the topmost disk.', 'error');
